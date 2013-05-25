@@ -46,9 +46,4 @@ public class Card {
 		else
 			return Integer.parseInt(substring);
 	}
-	
-	@Override
-	public Object clone() throws CloneNotSupportedException {
-		return super.clone();
-	}
 }

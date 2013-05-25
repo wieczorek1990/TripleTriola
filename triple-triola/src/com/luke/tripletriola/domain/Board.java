@@ -14,15 +14,17 @@ public class Board {
 		this.stage = stage;
 		for (int row = 0; row < 3; row++)
 			for (int col = 0; col < 3; col++) {
-				placeCard(Resources.blank, PlayerColor.NONE, row, col);
+				Card clone = Resources.blank;
+				placeCard(clone, PlayerColor.NONE, row, col);
 			}
 	}
 
 	public void placeCard(Card card, PlayerColor whoose, int row, int col) {
 		boardPlaces[row][col] = new BoardPlace(whoose, card);
 		Image image = card.getImage();
-		image.scale(-(1.0f - GameScreen.cardOnBoardScale));
-		image.setPosition(0, 0);
+		if (image.getScaleX() - GameScreen.cardOnBoardScale > 0.01)
+			image.setScale(GameScreen.cardOnBoardScale);
+		image.setPosition(col * image.getWidth(), row * image.getHeight());
 		stage.addActor(image);
 	}
 }
