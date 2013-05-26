@@ -12,8 +12,10 @@ import com.luke.tripletriola.screens.GameScreen;
 public class Board {
 	BoardPlace boardPlaces[][];
 	protected Stage stage;
+	protected GameScreen gameScreen;
 
-	public Board(Stage stage) {
+	public Board(GameScreen gameScreen, Stage stage) {
+		this.gameScreen = gameScreen;
 		this.boardPlaces = new BoardPlace[3][3];
 		this.stage = stage;
 		for (int row = 0; row < 3; row++)
@@ -23,19 +25,20 @@ public class Board {
 			}
 	}
 
-	public void placeCard(Card card, PlayerColor whoose, final int row,
+	public boolean placeCard(Card card, PlayerColor whoose, final int row,
 			final int col) {
+		if (boardPlaces[row][col] != null
+				&& boardPlaces[row][col].whoose != PlayerColor.NONE)
+			return false;
 		boardPlaces[row][col] = new BoardPlace(whoose, card);
 		Image image = card.getImage(whoose);
 		float scale = GameScreen.cardOnBoardScale;
 		if (image.getScaleX() - scale > 0.01)
 			image.setScale(scale);
-		System.out.println(stage.getWidth());
 		int w = Gdx.graphics.getWidth();
 		int h = Gdx.graphics.getHeight();
 		int x = (int) (w - image.getWidth() * 3 * scale) / 2;
 		int y = (int) (h - image.getHeight() * 3 * scale) / 2;
-		System.out.println(x);
 		image.setPosition(x + col * image.getWidth() * scale,
 				y + row * image.getHeight() * scale);
 		image.addListener(new ClickListener() {
@@ -45,9 +48,12 @@ public class Board {
 					System.out.println(String.format(
 							Messages.getString("Board.clicked"), row, //$NON-NLS-1$
 							col));
+				gameScreen.placeCard(gameScreen.getCurrentPlayerPreviewCard(),
+						row, col);
 				super.clicked(event, x, y);
 			}
 		});
 		stage.addActor(image);
+		return true;
 	}
 }
