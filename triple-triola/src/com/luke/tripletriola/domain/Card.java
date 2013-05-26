@@ -68,7 +68,7 @@ public class Card {
 		int beginIndex = direction.ordinal();
 		int endIndex = beginIndex + 1;
 		String substring = values.substring(beginIndex, endIndex);
-		if (substring == "A")
+		if (substring.equals("A"))
 			return 10;
 		else
 			return Integer.parseInt(substring);

@@ -20,7 +20,7 @@ import com.luke.tripletriola.screens.SplashScreen;
 public class TripleTriola extends Game {
 	public OrthographicCamera camera;
 	public static final String LOG = TripleTriola.class.getSimpleName();
-	public static final boolean DEBUG = true;
+	public static final boolean DEBUG = false;
 	public static final int TCP_PORT = 54555;
 	public static final int UDP_PORT = 54777;
 	ServerThread serverThread;
@@ -30,11 +30,8 @@ public class TripleTriola extends Game {
 	public void create() {
 		float w = Gdx.graphics.getWidth();
 		float h = Gdx.graphics.getHeight();
-
 		Texture.setEnforcePotImages(false);
-
 		camera = new OrthographicCamera(w, h);
-
 		if (!DEBUG)
 			setScreen(getSplashScreen());
 		else

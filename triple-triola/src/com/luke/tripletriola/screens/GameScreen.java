@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.luke.tripletriola.PreviewClickListener;
@@ -16,7 +15,7 @@ import com.luke.tripletriola.domain.Card;
 import com.luke.tripletriola.domain.Player;
 import com.luke.tripletriola.domain.PlayerColor;
 
-// TODO net, timer, score
+// TODO net, timer, score, whoose turn
 public class GameScreen extends AbstractScreen {
 	public static final float cardOnBoardScale = 0.35f;
 	public static final float cardOnPreviewScale = 0.5f;
@@ -24,7 +23,7 @@ public class GameScreen extends AbstractScreen {
 	protected Board board;
 	protected int currentPreviewCardNumberBlue;
 	protected int currentPreviewCardNumberRed;
-	protected int currentTurn = 0;
+	protected int currentTurn;
 	int height;
 	protected Image previewCardImageBlue;
 	protected Image previewCardImageRed;
@@ -36,7 +35,14 @@ public class GameScreen extends AbstractScreen {
 		width = Gdx.graphics.getWidth();
 		height = Gdx.graphics.getHeight();
 		this.board = new Board(this, stage);
+		currentTurn = 0;
 		nextTurn();
+	}
+
+	public void gameEnd() {
+		System.out.println("Game end!"); //$NON-NLS-1$
+		game.setScreen(game.getMenuScreen());
+		dispose();
 	}
 
 	public PlayerColor getCurrentPlayer() {
@@ -83,7 +89,8 @@ public class GameScreen extends AbstractScreen {
 			gameEnd();
 			return;
 		}
-		if (board.placeCard(card, getCurrentPlayer(), row, col)) {
+		if (board.placeCard(card, getCurrentPlayer(), row, col, true)) {
+			// TODO notify peer
 			PlayerColor player = getCurrentPlayer();
 			if (player == PlayerColor.BLUE) {
 				blue.cards.remove(currentPreviewCardNumberBlue);
@@ -91,14 +98,12 @@ public class GameScreen extends AbstractScreen {
 			} else if (player == PlayerColor.RED) {
 				red.cards.remove(currentPreviewCardNumberRed);
 				currentPreviewCardNumberRed = 0;
+			} else {
+				throw new InvalidParameterException(
+						Messages.getString("GameScreen.player")); //$NON-NLS-1$
 			}
 			nextTurn();
 		}
-	}
-
-	// TODO
-	public void gameEnd() {
-		System.out.println("Game end!");
 	}
 
 	private void prepareCards() {
@@ -127,16 +132,16 @@ public class GameScreen extends AbstractScreen {
 		red = new Player(redCards, PlayerColor.RED);
 	}
 
-	@Override
-	public void render(float delta) {
-		super.render(delta);
-		shapeRenderer.begin(ShapeType.Line);
-		shapeRenderer.setColor(0, 0, 0, 1);
-		int x = width / 4;
-		shapeRenderer.line(x, -height / 2, x, height / 2);
-		shapeRenderer.line(-x, -height / 2, -x, height / 2);
-		shapeRenderer.end();
-	}
+	// @Override
+	// public void render(float delta) {
+	// super.render(delta);
+	// shapeRenderer.begin(ShapeType.Line);
+	// shapeRenderer.setColor(0, 0, 0, 1);
+	// int x = width / 4;
+	// shapeRenderer.line(x, -height / 2, x, height / 2);
+	// shapeRenderer.line(-x, -height / 2, -x, height / 2);
+	// shapeRenderer.end();
+	// }
 
 	public void setNextPreviewCard(PlayerColor side) {
 		if (currentTurn == 10) {
@@ -159,8 +164,7 @@ public class GameScreen extends AbstractScreen {
 					% cards.size();
 			nextPreviewCardNumber = currentPreviewCardNumberRed;
 		} else
-			throw new InvalidParameterException(
-					Messages.getString("GameScreen.side")); //$NON-NLS-1$
+			throw new InvalidParameterException(""); //$NON-NLS-1$
 		currentPreviewCardImage.remove();
 		setPreviewCard(cards.get(nextPreviewCardNumber), side);
 	}
@@ -178,8 +182,7 @@ public class GameScreen extends AbstractScreen {
 				previewCardImageRed = previewCardImage;
 				x = 1;
 			} else
-				throw new InvalidParameterException(
-						Messages.getString("GameScreen.side")); //$NON-NLS-1$
+				throw new InvalidParameterException(""); //$NON-NLS-1$
 			previewCardImage.setPosition(
 					width * x / 8 - previewCardImage.getWidth() / 2 * scale,
 					(height - previewCardImage.getHeight() * scale) / 2);

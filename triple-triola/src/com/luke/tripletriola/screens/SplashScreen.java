@@ -27,10 +27,8 @@ public class SplashScreen extends AbstractScreen {
 		super.show();
 		texture = new Texture(Gdx.files.internal("graphics/splash.png")); //$NON-NLS-1$
 		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
-
 		textureRegion = new TextureRegion(texture, 0, 0, texture.getWidth(),
 				texture.getHeight());
-
 		sprite = new Sprite(textureRegion);
 		sprite.setSize(1.0f, sprite.getHeight() / sprite.getWidth());
 		sprite.setOrigin(sprite.getWidth() / 2, sprite.getHeight() / 2);
@@ -41,20 +39,14 @@ public class SplashScreen extends AbstractScreen {
 	public void resize(int width, int height) {
 		super.resize(width, height);
 		stage.clear();
-
 		Image splashImage = new Image(textureRegion);
 		splashImage.setSize(width, height);
 		splashImage.setScaling(Scaling.stretch);
-
-		// this is needed for the fade-in effect to work correctly; we're just
-		// making the image completely transparent
 		Color color = splashImage.getColor();
 		color.a = 0f;
 		splashImage.setColor(color);
-
-		SequenceAction sequenceAction = Actions.sequence(/*Actions.fadeIn(0.25f),
-				Actions.delay(0.5f), Actions.fadeOut(0.25f), */new Action() {
-
+		SequenceAction sequenceAction = Actions.sequence(Actions.fadeIn(0.25f),
+				Actions.delay(0.5f), Actions.fadeOut(0.25f), new Action() {
 					@Override
 					public boolean act(float delta) {
 						game.setScreen(game.getMenuScreen());
@@ -62,7 +54,6 @@ public class SplashScreen extends AbstractScreen {
 					}
 				});
 		splashImage.addAction(sequenceAction);
-
 		stage.addActor(splashImage);
 	};
 
