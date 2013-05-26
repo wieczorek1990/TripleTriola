@@ -26,7 +26,7 @@ public class Board {
 	public void placeCard(Card card, PlayerColor whoose, final int row,
 			final int col) {
 		boardPlaces[row][col] = new BoardPlace(whoose, card);
-		Image image = card.getImage();
+		Image image = card.getImage(whoose);
 		float scale = GameScreen.cardOnBoardScale;
 		if (image.getScaleX() - scale > 0.01)
 			image.setScale(scale);

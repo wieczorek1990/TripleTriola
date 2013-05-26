@@ -15,9 +15,8 @@ import com.luke.tripletriola.domain.Board;
 import com.luke.tripletriola.domain.Card;
 import com.luke.tripletriola.domain.Player;
 import com.luke.tripletriola.domain.PlayerColor;
-import com.luke.tripletriola.domain.Side;
 
-// TODO net, timer, score, blue/red cards 
+// TODO net, timer, score
 public class GameScreen extends AbstractScreen {
 	public static final float cardOnBoardScale = 0.35f;
 	public static final float cardOnPreviewScale = 0.5f;
@@ -30,7 +29,8 @@ public class GameScreen extends AbstractScreen {
 	protected int currentPreviewCardNumberRed;
 	protected Player red;
 	protected Player blue;
-	protected Image previewCardImage;
+	protected Image previewCardImageBlue;
+	protected Image previewCardImageRed;
 
 	public GameScreen(TripleTriola game) {
 		super(game);
@@ -40,16 +40,17 @@ public class GameScreen extends AbstractScreen {
 		nextTurn();
 	}
 
-	public void setNextPreviewCard(Side side) {
-		previewCardImage.remove();
+	public void setNextPreviewCard(PlayerColor side) {
 		ArrayList<Card> cards;
 		int currentPreviewCardNumber;
-		if (side == Side.RIGHT) {
+		if (side == PlayerColor.BLUE) {
+			previewCardImageBlue.remove();
 			cards = blue.cards;
 			currentPreviewCardNumberBlue = (currentPreviewCardNumberBlue + 1)
 					% cards.size();
 			currentPreviewCardNumber = currentPreviewCardNumberBlue;
-		} else if (side == Side.LEFT) {
+		} else if (side == PlayerColor.RED) {
+			previewCardImageRed.remove();
 			cards = red.cards;
 			currentPreviewCardNumberRed = (currentPreviewCardNumberRed + 1)
 					% cards.size();
@@ -60,17 +61,19 @@ public class GameScreen extends AbstractScreen {
 		setPreviewCard(cards.get(currentPreviewCardNumber), side);
 	}
 
-	public void setPreviewCard(Card card, Side side) {
-		previewCardImage = card.getImage();
+	public void setPreviewCard(Card card, PlayerColor side) {
+		Image previewCardImage = card.getImage(side);
 		if (previewCardImage.getListeners().size == 0) {
 			float scale = GameScreen.cardOnPreviewScale;
 			previewCardImage.setScale(scale);
 			int x;
-			if (side == Side.RIGHT)
+			if (side == PlayerColor.BLUE) {
+				previewCardImageBlue = previewCardImage;
 				x = 7;
-			else if (side == Side.LEFT)
+			} else if (side == PlayerColor.RED) {
+				previewCardImageRed = previewCardImage;
 				x = 1;
-			else
+			} else
 				throw new InvalidParameterException(
 						Messages.getString("GameScreen.side")); //$NON-NLS-1$
 			previewCardImage.setPosition(
@@ -101,11 +104,11 @@ public class GameScreen extends AbstractScreen {
 		if (currentTurn == 10)
 			currentPlayer = PlayerColor.NONE;
 		if (currentPlayer != PlayerColor.NONE) {
-			setPreviewCard(blue.cards.get(0), Side.RIGHT);
-			setPreviewCard(red.cards.get(0), Side.LEFT);
+			setPreviewCard(blue.cards.get(0), PlayerColor.BLUE);
+			setPreviewCard(red.cards.get(0), PlayerColor.RED);
 		} else {
-			setPreviewCard(Resources.reverse, Side.RIGHT);
-			setPreviewCard(Resources.reverse, Side.LEFT);
+			setPreviewCard(Resources.reverse, PlayerColor.BLUE);
+			setPreviewCard(Resources.reverse, PlayerColor.RED);
 		}
 	}
 

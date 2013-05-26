@@ -1,12 +1,12 @@
 package com.luke.tripletriola;
 
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.luke.tripletriola.domain.Side;
+import com.luke.tripletriola.domain.PlayerColor;
 
 public class PreviewClickListener extends ClickListener {
-	protected Side side;
+	protected PlayerColor side;
 
-	public PreviewClickListener(Side side) {
+	public PreviewClickListener(PlayerColor side) {
 		this.side = side;
 	}
 }
