@@ -12,6 +12,10 @@ public class Card {
 	Image image;
 	String values;
 
+	public Card clone() {
+		return new Card(name, values);
+	}
+
 	public Card(String name, String values) {
 		super();
 		if (values.length() != 4)
