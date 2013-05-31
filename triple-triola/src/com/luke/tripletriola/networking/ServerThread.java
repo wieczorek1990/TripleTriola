@@ -30,6 +30,7 @@ public class ServerThread extends Thread implements MoveSender {
 		try {
 			Server server = new Server();
 			server.addListener(new Listener() {
+				@Override
 				public void received(final Connection connection,
 						final Object object) {
 					if (object instanceof GameInfo) {
@@ -40,6 +41,7 @@ public class ServerThread extends Thread implements MoveSender {
 					if (object instanceof GameStart) {
 						clientConnection = connection;
 						Gdx.app.postRunnable(new Runnable() {
+							@Override
 							public void run() {
 								GameStart response = (GameStart) object;
 								ArrayList<Integer> cards = Board.prepareCards();
@@ -54,6 +56,7 @@ public class ServerThread extends Thread implements MoveSender {
 					}
 					if (object instanceof Move) {
 						Gdx.app.postRunnable(new Runnable() {
+							@Override
 							public void run() {
 								Move m = (Move) object;
 								gameScreen.placeCard(m.cardNubmer, m.row,

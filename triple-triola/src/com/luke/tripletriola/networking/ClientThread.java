@@ -34,6 +34,7 @@ public class ClientThread extends Thread implements MoveSender {
 					if (object instanceof GameStart) {
 						final GameStart response = (GameStart) object;
 						Gdx.app.postRunnable(new Runnable() {
+							@Override
 							public void run() {
 								Screen gs = game.getGameScreen(
 										GameType.MULTI_CLIENT, response.cards);
@@ -44,6 +45,7 @@ public class ClientThread extends Thread implements MoveSender {
 					}
 					if (object instanceof Move) {
 						Gdx.app.postRunnable(new Runnable() {
+							@Override
 							public void run() {
 								Move m = (Move) object;
 								gameScreen.placeCard(m.cardNubmer, m.row,
