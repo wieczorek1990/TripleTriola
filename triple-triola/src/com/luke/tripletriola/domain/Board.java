@@ -46,8 +46,9 @@ public class Board {
 		image.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				gameScreen.placeCard(gameScreen.getCurrentPlayerPreviewCard(),
-						row, col);
+				gameScreen.placeCard(
+						gameScreen.getCurrentPlayerPreviewCardNumber(), row,
+						col, true);
 				super.clicked(event, x, y);
 			}
 		});

@@ -26,6 +26,7 @@ public class TripleTriola extends Game {
 	public static final int UDP_PORT = 54777;
 	ServerThread serverThread;
 	ClientThread clientThread;
+	protected GameScreen gameScreen;
 
 	@Override
 	public void create() {
@@ -41,7 +42,8 @@ public class TripleTriola extends Game {
 	}
 
 	public Screen getGameScreen(GameType gameType, ArrayList<Integer> cards) {
-		return new GameScreen(this, gameType, cards);
+		gameScreen = new GameScreen(this, gameType, cards);
+		return gameScreen;
 	}
 
 	public Screen getHostGameScreen() {

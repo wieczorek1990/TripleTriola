@@ -15,6 +15,8 @@ import com.luke.tripletriola.domain.Board;
 import com.luke.tripletriola.domain.Card;
 import com.luke.tripletriola.domain.Player;
 import com.luke.tripletriola.domain.PlayerColor;
+import com.luke.tripletriola.networking.Move;
+import com.luke.tripletriola.networking.MoveSender;
 
 // TODO net, timer, score, whoose turn
 public class GameScreen extends AbstractScreen {
@@ -32,7 +34,8 @@ public class GameScreen extends AbstractScreen {
 	protected GameType gameType;
 	protected ArrayList<Integer> preparedCards;
 
-	public GameScreen(final TripleTriola game, GameType gameType, ArrayList<Integer> cards) {
+	public GameScreen(final TripleTriola game, final GameType gameType,
+			ArrayList<Integer> cards) {
 		super(game);
 		this.width = Gdx.graphics.getWidth();
 		this.height = Gdx.graphics.getHeight();
@@ -44,15 +47,18 @@ public class GameScreen extends AbstractScreen {
 		this.previewCardImages = new Image[2];
 		this.previewClickListeners = new PreviewClickListener[2];
 		this.preparedCards = cards;
+		this.gameType = gameType;
 		stage.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
+				if (end == 1 && gameType == GameType.MULTI_SERVER)
+					gameEnd();
 				if (end == 1) {
 					end = 2;
 					return;
 				}
 				if (end == 2)
-					game.setScreen(game.getMenuScreen());
+					gameEnd();
 				super.clicked(event, x, y);
 			}
 		});
@@ -71,11 +77,14 @@ public class GameScreen extends AbstractScreen {
 			return PlayerColor.RED;
 	}
 
-	public Card getCurrentPlayerPreviewCard() {
+	public int getCurrentPlayerPreviewCardNumber() {
+		return currentPreviewCardNumbers[getCurrentPlayer().ordinal()];
+	}
+
+	public Card getCurrentPlayerPreviewCard(int cardNumber) {
 		PlayerColor player = getCurrentPlayer();
 		if (player != PlayerColor.NONE)
-			return players[player.ordinal()].cards.get(
-					currentPreviewCardNumbers[player.ordinal()]).clone();
+			return players[player.ordinal()].cards.get(cardNumber).clone();
 		else
 			return Resources.reverse.clone();
 	}
@@ -100,19 +109,34 @@ public class GameScreen extends AbstractScreen {
 		currentTurn++;
 	}
 
-	public void placeCard(Card card, int row, int col) {
-		if (board.placeCard(card, getCurrentPlayer(), row, col, true)) {
-			// TODO notify peer
-			PlayerColor player = getCurrentPlayer();
-			if (player != PlayerColor.NONE) {
-				players[player.ordinal()].cards
-						.remove(currentPreviewCardNumbers[player.ordinal()]);
-				currentPreviewCardNumbers[player.ordinal()] = 0;
-			} else {
-				throw new InvalidParameterException(
-						Messages.getString("GameScreen.player")); //$NON-NLS-1$
+	public void placeCard(int cardNumber, int row, int col, boolean isMove) {
+		PlayerColor player = getCurrentPlayer();
+		if ((player == PlayerColor.RED && gameType == GameType.MULTI_SERVER)
+				|| (player == PlayerColor.BLUE && gameType == GameType.MULTI_CLIENT)
+				|| gameType == GameType.SIGNLE || !isMove) {
+			if (board.placeCard(getCurrentPlayerPreviewCard(cardNumber),
+					player, row, col, true)) {
+				if (player != PlayerColor.NONE) {
+					players[player.ordinal()].cards.remove(cardNumber);
+					currentPreviewCardNumbers[player.ordinal()] = 0;
+				} else {
+					throw new InvalidParameterException(
+							Messages.getString("GameScreen.player")); //$NON-NLS-1$
+				}
+				if (isMove && gameType != GameType.SIGNLE) {
+					MoveSender ms;
+					if (gameType == GameType.MULTI_SERVER)
+						ms = game.getServerThread();
+					else
+						ms = game.getClientThread();
+					Move move = new Move();
+					move.row = row;
+					move.col = col;
+					move.cardNubmer = cardNumber;
+					ms.move(move);
+				}
+				nextTurn();
 			}
-			nextTurn();
 		}
 	}
 
@@ -132,7 +156,8 @@ public class GameScreen extends AbstractScreen {
 	public void setNextPreviewCard(PlayerColor side) {
 		if (side != PlayerColor.NONE) {
 			previewCardImages[side.ordinal()].remove();
-			previewCardImages[side.ordinal()].removeListener(null);
+			previewCardImages[side.ordinal()]
+					.removeListener(previewClickListeners[side.ordinal()]);
 			ArrayList<Card> cards = players[side.ordinal()].cards;
 			int cardCount = cards.size();
 			if (cardCount != 0) {
