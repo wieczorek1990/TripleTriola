@@ -2,12 +2,12 @@ package com.luke.tripletriola.screens;
 
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
-import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.luke.tripletriola.GameType;
 import com.luke.tripletriola.PreviewClickListener;
 import com.luke.tripletriola.Resources;
 import com.luke.tripletriola.TripleTriola;
@@ -29,8 +29,10 @@ public class GameScreen extends AbstractScreen {
 	protected Player players[];
 	protected int width;
 	protected int end;
+	protected GameType gameType;
+	protected ArrayList<Integer> preparedCards;
 
-	public GameScreen(final TripleTriola game) {
+	public GameScreen(final TripleTriola game, GameType gameType, ArrayList<Integer> cards) {
 		super(game);
 		this.width = Gdx.graphics.getWidth();
 		this.height = Gdx.graphics.getHeight();
@@ -41,6 +43,7 @@ public class GameScreen extends AbstractScreen {
 		this.players = new Player[2];
 		this.previewCardImages = new Image[2];
 		this.previewClickListeners = new PreviewClickListener[2];
+		this.preparedCards = cards;
 		stage.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -57,8 +60,6 @@ public class GameScreen extends AbstractScreen {
 	}
 
 	public void gameEnd() {
-		if (TripleTriola.DEBUG)
-			System.out.println("Game end!"); //$NON-NLS-1$
 		dispose();
 		game.setScreen(game.getMenuScreen());
 	}
@@ -79,16 +80,14 @@ public class GameScreen extends AbstractScreen {
 			return Resources.reverse.clone();
 	}
 
-	private int nextInt(int min, int max) {
-		Random r = new Random();
-		return r.nextInt(max - min + 1) + min;
-	}
-
 	public void nextTurn() {
 		if (currentTurn == 0) {
 			currentPreviewCardNumbers[0] = 0;
 			currentPreviewCardNumbers[1] = 0;
-			prepareCards();
+			if (gameType == GameType.SIGNLE)
+				setCards(Board.prepareCards());
+			else
+				setCards(preparedCards);
 		}
 		if (currentTurn != 9) {
 			setPreviewCard(players[0].cards.get(0), PlayerColor.BLUE);
@@ -117,20 +116,7 @@ public class GameScreen extends AbstractScreen {
 		}
 	}
 
-	private void prepareCards() {
-		int cardCount = Resources.cards.length;
-		ArrayList<Integer> cardNumbers = new ArrayList<Integer>();
-		for (int card = 0; card < cardCount; card++) {
-			cardNumbers.add(card);
-		}
-		for (int swap = 0; swap < cardCount; swap++) {
-			int firstIdx = nextInt(0, cardCount - 1);
-			int secondIdx = nextInt(0, cardCount - 1);
-			int first = cardNumbers.get(firstIdx);
-			int second = cardNumbers.get(secondIdx);
-			cardNumbers.set(firstIdx, second);
-			cardNumbers.set(secondIdx, first);
-		}
+	public void setCards(ArrayList<Integer> cardNumbers) {
 		ArrayList<Card> blueCards = new ArrayList<Card>();
 		for (int card = 0; card < 5; card++) {
 			blueCards.add(Resources.cards[cardNumbers.get(card)]);

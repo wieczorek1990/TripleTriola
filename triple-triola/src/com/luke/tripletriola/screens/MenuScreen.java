@@ -1,10 +1,13 @@
 package com.luke.tripletriola.screens;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.luke.tripletriola.GameType;
 import com.luke.tripletriola.TripleTriola;
 
 public class MenuScreen extends AbstractScreen {
@@ -18,15 +21,17 @@ public class MenuScreen extends AbstractScreen {
 		super.resize(width, height);
 
 		Skin skin = super.getSkin();
-		Label singleDevice = new Label(Messages.getString("MenuScreen.singleDevice"), skin); //$NON-NLS-1$
+		Label singleDevice = new Label(
+				Messages.getString("MenuScreen.singleDevice"), skin); //$NON-NLS-1$
 		singleDevice.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				game.setScreen(game.getGameScreen());
+				game.setScreen(game.getGameScreen(GameType.SIGNLE, new ArrayList<Integer>()));
 				super.clicked(event, x, y);
 			}
 		});
-		Label lanPlay = new Label(Messages.getString("MenuScreen.lanPlay"), skin); //$NON-NLS-1$
+		Label lanPlay = new Label(
+				Messages.getString("MenuScreen.lanPlay"), skin); //$NON-NLS-1$
 		lanPlay.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -34,7 +39,8 @@ public class MenuScreen extends AbstractScreen {
 				super.clicked(event, x, y);
 			}
 		});
-		Label options = new Label(Messages.getString("MenuScreen.options"), skin); //$NON-NLS-1$
+		Label options = new Label(
+				Messages.getString("MenuScreen.options"), skin); //$NON-NLS-1$
 		options.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {

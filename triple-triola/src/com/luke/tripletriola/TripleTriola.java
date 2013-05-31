@@ -1,5 +1,7 @@
 package com.luke.tripletriola;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -31,18 +33,15 @@ public class TripleTriola extends Game {
 		float h = Gdx.graphics.getHeight();
 		Texture.setEnforcePotImages(false);
 		camera = new OrthographicCamera(w, h);
-		if (!DEBUG)
-			setScreen(getSplashScreen());
-		else
-			setScreen(getGameScreen());
+		setScreen(getSplashScreen());
 	}
 
 	public Screen getConnectionScreen() {
 		return new ConnectionScreen(this);
 	}
 
-	public Screen getGameScreen() {
-		return new GameScreen(this);
+	public Screen getGameScreen(GameType gameType, ArrayList<Integer> cards) {
+		return new GameScreen(this, gameType, cards);
 	}
 
 	public Screen getHostGameScreen() {
@@ -64,7 +63,7 @@ public class TripleTriola extends Game {
 	public Screen getSplashScreen() {
 		return new SplashScreen(this);
 	}
-	
+
 	public Screen getWaitScreen() {
 		return new WaitScreen(this);
 	}

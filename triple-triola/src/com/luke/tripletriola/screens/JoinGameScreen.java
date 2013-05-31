@@ -61,10 +61,10 @@ public class JoinGameScreen extends AbstractScreen {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				GameLabel lbl = (GameLabel) label;
-				ClientThread clientThread = new ClientThread(lbl.getAddress());
+				ClientThread clientThread = new ClientThread(game, lbl.getAddress());
 				game.setClientThread(clientThread);
 				clientThread.start();
-				game.setScreen(game.getGameScreen());
+				game.setScreen(game.getWaitScreen());
 				super.clicked(event, x, y);
 			}
 		});

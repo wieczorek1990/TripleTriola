@@ -1,5 +1,8 @@
 package com.luke.tripletriola.domain;
 
+import java.util.ArrayList;
+import java.util.Random;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -87,5 +90,27 @@ public class Board {
 		BoardPlace boardPlace = boardPlaces[row][col];
 		boardPlace.whoose = boardPlace.whoose.getOpositiePlayerColor();
 		placeCard(boardPlace.card, boardPlace.whoose, row, col, false);
+	}
+
+	private static int nextInt(int min, int max) {
+		Random r = new Random();
+		return r.nextInt(max - min + 1) + min;
+	}
+
+	public static ArrayList<Integer> prepareCards() {
+		int cardCount = Resources.cards.length;
+		ArrayList<Integer> cardNumbers = new ArrayList<Integer>();
+		for (int card = 0; card < cardCount; card++) {
+			cardNumbers.add(card);
+		}
+		for (int swap = 0; swap < cardCount; swap++) {
+			int firstIdx = nextInt(0, cardCount - 1);
+			int secondIdx = nextInt(0, cardCount - 1);
+			int first = cardNumbers.get(firstIdx);
+			int second = cardNumbers.get(secondIdx);
+			cardNumbers.set(firstIdx, second);
+			cardNumbers.set(secondIdx, first);
+		}
+		return cardNumbers;
 	}
 }
