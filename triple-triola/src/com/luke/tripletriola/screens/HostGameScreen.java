@@ -36,10 +36,11 @@ public class HostGameScreen extends AbstractScreen {
 		hostGame.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				ServerThread serverThread = new ServerThread(gameNameText
+				ServerThread serverThread = new ServerThread(game, gameNameText
 						.getText());
 				game.setServerThread(serverThread);
 				serverThread.start();
+				game.setScreen(game.getWaitScreen());
 				super.clicked(event, x, y);
 			}
 		});

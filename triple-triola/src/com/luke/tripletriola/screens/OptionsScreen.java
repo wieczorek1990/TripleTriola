@@ -31,4 +31,5 @@ public class OptionsScreen extends AbstractScreen {
 		table.add(back);
 		stage.addActor(table);
 	}
+
 }

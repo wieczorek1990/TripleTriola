@@ -1,7 +1,5 @@
 package com.luke.tripletriola;
 
-import java.net.InetAddress;
-
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -16,6 +14,7 @@ import com.luke.tripletriola.screens.JoinGameScreen;
 import com.luke.tripletriola.screens.MenuScreen;
 import com.luke.tripletriola.screens.OptionsScreen;
 import com.luke.tripletriola.screens.SplashScreen;
+import com.luke.tripletriola.screens.WaitScreen;
 
 public class TripleTriola extends Game {
 	public OrthographicCamera camera;
@@ -62,8 +61,12 @@ public class TripleTriola extends Game {
 		return new OptionsScreen(this);
 	}
 
-	private Screen getSplashScreen() {
+	public Screen getSplashScreen() {
 		return new SplashScreen(this);
+	}
+	
+	public Screen getWaitScreen() {
+		return new WaitScreen(this);
 	}
 
 	@SuppressWarnings("nls")
@@ -82,10 +85,11 @@ public class TripleTriola extends Game {
 		return serverThread;
 	}
 
-	public ClientThread getClientThread(InetAddress inetAddress) {
-		if (clientThread == null) {
-			clientThread = new ClientThread(inetAddress);
-		}
+	public void setClientThread(ClientThread clientThread) {
+		this.clientThread = clientThread;
+	}
+
+	public ClientThread getClientThread() {
 		return clientThread;
 	}
 }

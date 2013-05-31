@@ -9,7 +9,7 @@ import com.luke.tripletriola.Resources;
 import com.luke.tripletriola.screens.GameScreen;
 
 public class Board {
-	BoardPlace boardPlaces[][];
+	protected BoardPlace boardPlaces[][];
 	protected Stage stage;
 	protected GameScreen gameScreen;
 
