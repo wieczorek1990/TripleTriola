@@ -74,10 +74,11 @@ public class TripleTriola extends Game {
 				+ screen.getClass().getSimpleName());
 	}
 
+	public void setServerThread(ServerThread serverThread) {
+		this.serverThread = serverThread;
+	}
+
 	public ServerThread getServerThread() {
-		if (serverThread == null) {
-			serverThread = new ServerThread();
-		}
 		return serverThread;
 	}
 

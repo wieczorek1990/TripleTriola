@@ -28,13 +28,17 @@ public class HostGameScreen extends AbstractScreen {
 				super.clicked(event, x, y);
 			}
 		});
-		Label gameName = new Label(Messages.getString("HostGameScreen.gameName"), skin); //$NON-NLS-1$
+		Label gameName = new Label(
+				Messages.getString("HostGameScreen.gameName"), skin); //$NON-NLS-1$
 		final TextField gameNameText = new TextField("TT", skin); //$NON-NLS-1$
-		Label hostGame = new Label(Messages.getString("HostGameScreen.hostGame"), skin); //$NON-NLS-1$
+		Label hostGame = new Label(
+				Messages.getString("HostGameScreen.hostGame"), skin); //$NON-NLS-1$
 		hostGame.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				ServerThread serverThread = game.getServerThread();
+				ServerThread serverThread = new ServerThread(gameNameText
+						.getText());
+				game.setServerThread(serverThread);
 				serverThread.start();
 				super.clicked(event, x, y);
 			}
