@@ -7,6 +7,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.luke.tripletriola.domain.Card;
 import com.luke.tripletriola.networking.ClientThread;
 import com.luke.tripletriola.networking.ServerThread;
 import com.luke.tripletriola.screens.ConnectionScreen;
@@ -92,5 +93,14 @@ public class TripleTriola extends Game {
 
 	public ClientThread getClientThread() {
 		return clientThread;
+	}
+	
+	@Override
+	public void resume() {
+		for (Card card : Resources.cards)
+			card.load();
+		Resources.blank.load();
+		Resources.reverse.load();
+		super.resume();
 	}
 }

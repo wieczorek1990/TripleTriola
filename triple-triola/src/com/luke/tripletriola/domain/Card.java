@@ -26,6 +26,10 @@ public class Card {
 					Messages.getString("Card.values")); //$NON-NLS-1$
 		this.name = name;
 		this.values = values;
+		load();
+	}
+
+	public void load() {
 		this.image = loadImage(PlayerColor.NONE);
 		this.blueImage = loadImage(PlayerColor.BLUE);
 		this.redImage = loadImage(PlayerColor.RED);
