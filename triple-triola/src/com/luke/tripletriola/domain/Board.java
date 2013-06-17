@@ -6,6 +6,7 @@ import java.util.Random;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.luke.tripletriola.Resources;
@@ -53,7 +54,8 @@ public class Board {
 			}
 		});
 		stage.addActor(image);
-
+		Card.setTransparent(image);
+		image.addAction(Actions.fadeIn(1f));
 		if (isMove)
 			move(card, row, col);
 		return true;
@@ -87,10 +89,11 @@ public class Board {
 		}
 	}
 
-	private void changeOwner(int row, int col) {
+	private void changeOwner(final int row, final int col) {
 		BoardPlace boardPlace = boardPlaces[row][col];
+		Card card = boardPlace.card;
 		boardPlace.whoose = boardPlace.whoose.getOpositiePlayerColor();
-		placeCard(boardPlace.card, boardPlace.whoose, row, col, false);
+		placeCard(card, boardPlace.whoose, row, col, false);
 	}
 
 	private static int nextInt(int min, int max) {

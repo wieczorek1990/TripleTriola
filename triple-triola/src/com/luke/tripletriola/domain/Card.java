@@ -4,6 +4,7 @@ import java.security.InvalidParameterException;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
@@ -33,6 +34,12 @@ public class Card {
 		this.image = loadImage(PlayerColor.NONE);
 		this.blueImage = loadImage(PlayerColor.BLUE);
 		this.redImage = loadImage(PlayerColor.RED);
+	}
+	
+	public static void setTransparent(Image image) {
+		Color color = image.getColor();
+		color.a = 0f;
+		image.setColor(color);
 	}
 
 	public String getName() {
